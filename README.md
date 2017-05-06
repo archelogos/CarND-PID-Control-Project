@@ -1,6 +1,58 @@
 # CarND-Controls-PID
 Self-Driving Car Engineer Nanodegree Program
 
+## Param tuning explanaition
+
+In this project we have made use of a PID controller to drive a car.
+
+To do that it has been implemented a C++ class (PID). The properties of this class
+are the PID coefficients and errors.
+
+The class also implements two methods. The first one, called UpdateError, updates the
+proportional, differential and integral errors of the PID controller.
+
+The proportional error is updated according with the new CTE value.
+The differential error is the substraction between the previous CTE and the current one.
+The integral error is the sum of the all CTE.
+
+The TotalError method applies the following formula to calculate the total error of the controller.
+
+error = -Kp * p_error - Kd * d_error - Ki * i_error
+
+The key point in this project is to find the appropriate values for the coefficients.
+
+Because of the total error it is calculated with three components, it is really important to
+understand how each one affects to the resulting estimation.
+
+If the proportional coefficient is too high, the car starts to oscillate and it cannot converge.
+
+In other hand, the integral coefficient must to be the lowest because it represents the sum of all errors. If it is
+too high, the car starts moving in circles.
+
+Finally, the differential coefficient needs to be the greater one in order to detect rapid oscillations in the
+CTE that could represent curves in the road.
+
+Mentioned that, the final chosen values are:
+
+```python
+double Kp_pid_steering = 0.1;  // proportional coefficient
+double Ki_pid_steering = 0.005;  // integral coefficient
+double Kd_pid_steering = 4.0;  // differential coefficient
+```
+
+The car sometimes oscillates a little bit, but it quickly changes the steering angle and takes
+the right direction again. Thanks to the high kd and ki values, it does not go out of the road,
+even if the car is entering a curve fast.
+
+It is also implemented a PID controller to set the throttle of the vehicle. It works fine, but not too much in comparision
+with the constant throttle scenario.
+
+Depending on the CTE and the given maximum speed, the algorithm defines a target speed. After that, the controller
+calculates the error considering the CTE as the subtstraction between the current speed and the target speed.
+
+Generally speaking, the car behaves properly the majority of the time and it does not go out of the road.
+It also gets a faster speed, but it sometimes oscillates too much and it could not be considered a safe driving.
+
 ---
 
 ## Dependencies
@@ -25,7 +77,7 @@ Self-Driving Car Engineer Nanodegree Program
 1. Clone this repo.
 2. Make a build directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
-4. Run it: `./pid`. 
+4. Run it: `./pid`.
 
 ## Editor Settings
 
